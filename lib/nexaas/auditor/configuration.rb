@@ -6,23 +6,22 @@ module Nexaas
 
       attr_accessor :enabled
       attr_accessor :logger
-      attr_accessor :use_app_logging
-      attr_accessor :use_staff_logging
-      attr_accessor :use_app_statistics
-      attr_accessor :use_staff_statistics
-      attr_accessor :use_rails_statistics
+
+      attr_accessor :log_app_events
+      attr_accessor :track_app_events
+      attr_accessor :track_rails_events
+
       attr_accessor :statistics_namespace
       attr_accessor :statistics_service
+
       attr_accessor :stathat_settings
 
       def initialize
         @enabled = nil # set to true when configure is called
         @logger = nil
-        @use_app_logging = false
-        @use_staff_logging = false
-        @use_app_statistics = false
-        @use_staff_statistics = false
-        @use_rails_statistics = false
+        @log_app_events = false
+        @track_app_events = false
+        @track_rails_events = false
         @statistics_namespace = nil
         @statistics_service = 'log' # or 'stathat'
         @stathat_settings = {key: nil}

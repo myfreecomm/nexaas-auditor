@@ -27,26 +27,23 @@ $ gem install nexaas-auditor
 In a Rails initializer file such as `config/initializers/nexaas_auditor.rb`, put something like this:
 
 ```ruby
-require 'nexaas/auditor/rails'
+require 'nexaas/auditor'
 
 Nexaas::Auditor.configure do |config|
   config.enabled = true
   config.logger = Rails.logger
 
   # use audit logging for 'app.*' instrumented events
-  config.use_app_logging = true
-  # use audit logging for 'staff.*' instrumented events
-  config.use_staff_logging = true
+  config.log_app_events = true
 
-  # use stats tracking for 'app.*' instrumented events
-  config.use_app_statistics = true
-  # use stats tracking for 'staff.*' instrumented events
-  config.use_staff_statistics = true
-  # use stats tracking for default rails instrumented events
-  config.use_rails_statistics = true
+  # use statistics tracking for 'app.*' instrumented events
+  config.track_app_events = true
 
-  # optionally, prepend statistic metric names on the service. use this if you
-  # use the same stats service (ie StatHat) for multiple apps
+  # use statistics tracking for default rails instrumented events
+  config.track_rails_events = true
+
+  # optionally, prepend statistics metric names on the service. use this if you
+  # use the same statistics service (ie StatHat) for multiple apps
   config.statistics_namespace = 'myappname'
 
   if Rails.env.production?
@@ -57,6 +54,90 @@ Nexaas::Auditor.configure do |config|
     # the 'log' service only writes the stats to the logger instead of sending
     # them to an external service.
     config.statistics_service = 'log'
+  end
+end
+
+# setups all subscribers
+Nexaas::Auditor.subscribe_all
+```
+
+Then, create your loggers and statistic trackers in `app/loggers/` and `app/statistics/` for example, inheriting from `Nexaas::Auditor::LogSubscriber` and `Nexaas::Auditor::StatsSubscriber` respectively.
+
+For example:
+
+```ruby
+class UsersAppLogger < ::Nexaas::Auditor::LogSubscriber
+  # The namespace for events to subscribe to. In this example, subscribe to all
+  # events beggining with "app.users.".
+  def self.pattern
+    /\Aapp\.users\..+\Z/
+  end
+
+  # Called when an event with name == 'app.users.login.success' is received.
+  #
+  #   name = the event name, 'app.users.login.success' in this case
+  #   start = the time the event started
+  #   finish = the time the event finished
+  #     (tip: finish - start gives you the duration in seconds as a float)
+  #   event_id = an unique id for the event
+  #   payload = a hash of extra data the event may have supplied when instrumented
+  #
+  def log_event_app_users_login_success(name, start, finish, event_id, payload)
+    user_id = payload[:user_id]
+    # Do the actual loggging. The `:level` and `:measure` keys are required,
+    # anything else will be transformed in a key=value pair in the log string.
+    logger.log(level: :info, measure: name, user_id: user_id)
+  end
+end
+
+class UsersAppStatsTracker < ::Nexaas::Auditor::StatsSubscriber
+  # The namespace for events to subscribe to. In this example, subscribe to all
+  # events beggining with "app.users.".
+  def self.pattern
+    /\Aapp\.users\..+\Z/
+  end
+
+  # Called when an event with name == 'app.users.login.success' is received.
+  #
+  #   name = the event name, 'app.users.login.success' in this case
+  #   start = the time the event started
+  #   finish = the time the event finished
+  #     (tip: finish - start gives you the duration in seconds as a float)
+  #   event_id = an unique id for the event
+  #   payload = a hash of extra data the event may have supplied when instrumented
+  #
+  def track_event_app_users_login_success(name, start, finish, event_id, payload)
+    user_id = payload[:user_id]
+
+    # Do the actual statistic tracking.
+
+    # Use the `count` type to track event occurences or quantities. The `:metric`
+    # key is required (generally use the name or append something to the name).
+    # The `:value` should be an Integer. If `:value` is ommited it will be
+    # assumed a value of 1.
+    tracker.track_count(metric: name, value: 1)
+
+    # Use the `value` type to track event durations or amounts. The `:metric`
+    # key is required (generally use the name or append something to the name).
+    # The `:value` key is also required and should be an Integer, Float or Decimal.
+    duration = ((finish - start) * 1_000.0).round # to get the value in milliseconds
+    tracker.track_value(metric: "#{name}.duration", value: duration)
+  end
+end
+```
+
+Now all that is left is for you to instrument your code to fire the events above. Following the example of logging and tracking user logins, we might have this in a hipothetical `SessionsController` in your app:
+
+```ruby
+class SessionsController < ApplicationController
+  def create
+    @user = User.authenticate(session_params)
+    if @user
+      Nexaas::Auditor.instrument('app.users.login.success', user_id: @user.id)
+      redirect_to root_path, success: "You are logged in!"
+    else
+      # do something else, show some error, etc
+    end
   end
 end
 ```
