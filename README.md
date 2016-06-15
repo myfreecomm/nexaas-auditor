@@ -24,7 +24,42 @@ $ gem install nexaas-auditor
 
 ## Usage
 
-TODO: Write usage instructions here.
+In a Rails initializer file such as `config/initializers/nexaas_auditor.rb`, put something like this:
+
+```ruby
+require 'nexaas/auditor/rails'
+
+Nexaas::Auditor.configure do |config|
+  config.enabled = true
+  config.logger = Rails.logger
+
+  # use audit logging for 'app.*' instrumented events
+  config.use_app_logging = true
+  # use audit logging for 'staff.*' instrumented events
+  config.use_staff_logging = true
+
+  # use stats tracking for 'app.*' instrumented events
+  config.use_app_statistics = true
+  # use stats tracking for 'staff.*' instrumented events
+  config.use_staff_statistics = true
+  # use stats tracking for default rails instrumented events
+  config.use_rails_statistics = true
+
+  # optionally, prepend statistic metric names on the service. use this if you
+  # use the same stats service (ie StatHat) for multiple apps
+  config.statistics_namespace = 'myappname'
+
+  if Rails.env.production?
+    # use StatHat service in production only
+    config.statistics_service = 'stathat'
+    config.stathat_settings = {key: 'stathat-ez-key'}
+  else
+    # the 'log' service only writes the stats to the logger instead of sending
+    # them to an external service.
+    config.statistics_service = 'log'
+  end
+end
+```
 
 ## Development
 
