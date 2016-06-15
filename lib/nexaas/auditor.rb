@@ -53,7 +53,7 @@ module Nexaas
 
       def subscribe_all
         subscribers = []
-        subscribers << LogSubscriber.subscribe_all if configuration.log_app_events
+        subscribers << LogsSubscriber.subscribe_all if configuration.log_app_events
         subscribers << StatsSubscriber.subscribe_all if configuration.track_app_events
         subscribers << RailsSubscriber.subscribe_all if configuration.track_rails_events
         subscribers
