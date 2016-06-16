@@ -1,6 +1,12 @@
 # Nexaas::Auditor
 
-Common code for audit logs and statistcs tracking for [Nexaas](http://www.nexaas.com) Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html).
+Common **opnionated** code for audit logs and statistcs tracking for Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html). Used in production in a few [Nexaas](http://www.nexaas.com) systems.
+
+This has been tested with Rails 4.2.x only so far. It probably works fine as well in Rails 4.1.x, but I'm not sure about Rails 3.x yet.
+
+The audit log is created in a [logfmt](https://www.brandur.org/logfmt) format only for now. Support for more log formats is planned in the future.
+
+Both the audit log and statistics tracking assume all instrumented events are named in a dot notation format, for example you could use `'app.users.login.sucess'` to instrument a successful user login event. The `'app.'` prefix is a suggestion to separate your bussiness-logic events from framework-specific (Rails) events, which will always have a `'rails.'` prefix, for example `'rails.action_controller.runtime.total'` for example.
 
 ## Installation
 
@@ -33,31 +39,34 @@ Nexaas::Auditor.configure do |config|
   config.enabled = true
   config.logger = Rails.logger
 
-  # use audit logging for 'app.*' instrumented events
+  # use audit logging for bussiness-logic instrumented events
   config.log_app_events = true
 
-  # use statistics tracking for 'app.*' instrumented events
+  # use statistics tracking for bussiness-logic instrumented events
   config.track_app_events = true
 
-  # use statistics tracking for default rails instrumented events
+  # use statistics tracking for default Rails instrumented events
+  # don't forget to add the 'nunes' gem to your Gemfile (we use Nunes to do the
+  # heavy lifting on the instrumented Rails events)
   config.track_rails_events = true
 
-  # optionally, prepend statistics metric names on the service. use this if you
-  # use the same statistics service (ie StatHat) for multiple apps
+  # optionally, prepend statistics metric names with your app name. use this if
+  # you use the same statistics service (ie StatHat) for multiple apps.
   config.statistics_namespace = 'myappname'
 
   if Rails.env.production?
     # use StatHat service in production only
+    # don't forget to add the 'stathat' gem to your Gemfile
     config.statistics_service = 'stathat'
     config.stathat_settings = {key: 'stathat-ez-key'}
   else
-    # the 'log' service only writes the stats to the logger instead of sending
-    # them to an external service.
+    # the 'log' service only writes the stats to the audit log instead of
+    # sending them to an external service.
     config.statistics_service = 'log'
   end
 end
 
-# setups all subscribers
+# setup all subscribers
 Nexaas::Auditor.subscribe_all
 ```
 
