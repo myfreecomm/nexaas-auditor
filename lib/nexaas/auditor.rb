@@ -36,20 +36,12 @@ module Nexaas
         Thread.current[:_nexaas_auditor_logger] ||= AuditLogger.new
       end
 
-      # def logger=(new_logger)
-      #   Thread.current[:_nexaas_auditor_logger] = new_logger
-      # end
-
       def tracker
         Thread.current[:_nexaas_auditor_tracker] ||= StatisticsTracker.setup(
           configuration.statistics_service,
           configuration.statistics_namespace
         )
       end
-
-      # def tracker=(new_tracker)
-      #   Thread.current[:_nexaas_auditor_tracker] = new_tracker
-      # end
 
       def subscribe_all
         subscribers = []

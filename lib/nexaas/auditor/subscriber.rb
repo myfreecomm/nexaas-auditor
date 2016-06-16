@@ -1,3 +1,5 @@
+require 'active_support/core_ext/class/subclasses'
+
 module Nexaas
   module Auditor
     class Subscriber
@@ -12,7 +14,7 @@ module Nexaas
 
       def self.subscribe(options={})
         subscriber = options.fetch(:subscriber) { ::ActiveSupport::Notifications }
-        subscriber.subscribe pattern, new
+        subscriber.subscribe(pattern, new)
       end
 
       def self.pattern

@@ -3,9 +3,11 @@ module Nexaas
     class RailsSubscriber
 
       def self.subscribe_all
-        statistics_tracker = Nexaas::Auditor.tracker
-        nunes_statistics_tracker = Nexaas::Auditor::Adapters::Nunes.new(statistics_tracker)
-        ::Nunes.subscribe(nunes_statistics_tracker)
+        ::Nunes.subscribe(nunes_statistics_wrapper)
+      end
+
+      def self.nunes_statistics_wrapper
+        Nexaas::Auditor::Adapters::Nunes.new(Nexaas::Auditor.tracker)
       end
 
     end

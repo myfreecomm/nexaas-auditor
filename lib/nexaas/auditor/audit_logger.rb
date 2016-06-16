@@ -4,20 +4,28 @@ module Nexaas
 
       VALID_LEVELS = %w(degug info warn error fatal)
 
-      def initialize
-        @logger = Nexaas::Auditor.configuration.logger
+      attr_accessor :logger
+
+      def initialize(logger=nil)
+        @logger = logger
+      end
+
+      def logger
+        @logger ||= Nexaas::Auditor.configuration.logger
       end
 
       def log(options={})
         level = options.delete(:level)
         raise ArgumentError, "required key `:level` not found" if level.nil?
         raise ArgumentError, "key `:level` is invalid: '#{level}'" unless VALID_LEVELS.include?(level.to_s)
-        safe_call { @logger.send(level, to_message(options)) }
+        check_message!(options)
+        safe_call { logger.send(level, to_message(options)) }
       end
 
+      private
+
       def to_message(options)
-        # TODO move this logic to a dedicated class
-        check_message!(options)
+        # TODO move this logic to a dedicated class and add more tests
         options.inject(['audit_log=true']) do |array, (key,value)|
           value = value.respond_to?(:iso8601) ? value.iso8601 : value
           array << "#{key}=#{value.to_s.strip.gsub(/\s/, '-')}"
@@ -29,7 +37,7 @@ module Nexaas
         begin
           yield
         rescue => exception
-          @logger.fatal("role=audit_logger class=#{self.class} measure=errors.unable_to_log exception=#{exception.class}")
+          logger.fatal("role=audit_logger class=#{self.class} measure=errors.unable_to_log exception=#{exception.class}")
         end
       end
 

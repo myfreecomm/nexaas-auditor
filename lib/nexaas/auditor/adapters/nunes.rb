@@ -5,6 +5,9 @@ module Nexaas
     module Adapters
 
       class Nunes < ::Nunes::Adapter
+
+        attr_reader :client
+
         def initialize(client)
           @client = client
         end
