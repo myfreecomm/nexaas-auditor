@@ -3,18 +3,18 @@ module Nexaas
     module StatisticsTrackers
       class Base
 
-        def track_count(name, value=nil)
-          track(:count, name, value)
+        def track_count(metric:, value: nil)
+          value ||= 1
+          track(:count, metric, value)
         end
 
-        def track_value(name, value)
-          track(:value, name, value)
+        def track_value(metric:, value:)
+          track(:value, metric, value)
         end
 
         private
 
         def track(type, name, value)
-          value ||= 1 if type == :count
           validate_value!(value, type)
           full_name = full_metric_name(name)
           validate_name!(name, full_name)
