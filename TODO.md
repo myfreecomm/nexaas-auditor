@@ -2,7 +2,6 @@
 
 Tasks yet to be done, in order of importance. Feel free to help out ;-)
 
-- Get test coverage to 100%
 - Setup Travis.CI integration
 - Setup CodeClimate integration
 - Only require [Nunes](https://github.com/jnunemaker/nunes) gem if the configuration says `track_rails_events = true`, and "fail fast" if `Nunes` is not loaded

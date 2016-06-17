@@ -21,8 +21,18 @@ describe Nexaas::Auditor::StatisticsTrackers::Log do
         with("[Nexaas::Auditor::StatisticsTrackers::Log] type=count metric=myapp.foo.bar value=1")
       subject.track_count('foo.bar')
     end
-    pending 'validate value'
-    pending 'validate name'
+    ['string', '', Time.now, '1'].each do |value|
+      it "requires a valid value, not #{value.inspect}" do
+        expect { subject.track_count('foobar', value) }.
+          to raise_error(ArgumentError, /unsuported value/)
+      end
+    end
+    [nil, '', Time.now, 'foo/bar', 'foo=bar'].each do |value|
+      it "requires a valid metric name, not #{value.inspect}" do
+        expect { subject.track_count(value, 1) }.
+          to raise_error(ArgumentError, /unsuported metric name/)
+      end
+    end
   end
 
   describe '#track_value' do
@@ -32,8 +42,18 @@ describe Nexaas::Auditor::StatisticsTrackers::Log do
         with("[Nexaas::Auditor::StatisticsTrackers::Log] type=value metric=myapp.foo.bar value=42.5")
       subject.track_value('foo.bar', 42.5)
     end
-    pending 'validate value'
-    pending 'validate name'
+    ['string', '', Time.now, '1'].each do |value|
+      it "requires a valid value, not #{value.inspect}" do
+        expect { subject.track_value('foobar', value) }.
+          to raise_error(ArgumentError, /unsuported value/)
+      end
+    end
+    [nil, '', Time.now, 'foo/bar', 'foo=bar'].each do |value|
+      it "requires a valid metric name, not #{value.inspect}" do
+        expect { subject.track_value(value, 1.0) }.
+          to raise_error(ArgumentError, /unsuported metric name/)
+      end
+    end
   end
 
 end

@@ -17,7 +17,7 @@ module Nexaas
           value ||= 1 if type == :count
           validate_value!(value, type)
           full_name = full_metric_name(name)
-          validate_name!(full_name)
+          validate_name!(name, full_name)
 
           send_track(type, full_name, value)
         end
@@ -35,8 +35,10 @@ module Nexaas
         end
 
         # allowed chars: a-z, A-Z, `.`, `-` and `_`
-        def validate_name!(name)
-          raise ArgumentError, "unsuported metric name: '#{name}'" unless name =~ /\A[a-zA-Z0-9\.\-_]+\Z/
+        def validate_name!(name, full_name)
+          if (name.to_s == '') || !(full_name =~ /\A[a-zA-Z0-9\.\-_]+\Z/)
+            raise ArgumentError, "unsuported metric name: '#{name}'"
+          end
         end
 
         # allowed values: Numeric (Integer, Float, Decimal, etc)

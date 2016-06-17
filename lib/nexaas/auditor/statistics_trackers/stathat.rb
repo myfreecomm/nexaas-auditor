@@ -5,6 +5,8 @@ module Nexaas
     module StatisticsTrackers
       class Stathat < Base
 
+        attr_reader :logger
+
         def initialize(key, namespace=nil)
           @key = key.to_s
           @namespace = namespace.to_s
@@ -28,7 +30,7 @@ module Nexaas
           # StatHat::SyncAPI to make synchronous calls to StatHat.
           klass = (short_running_process? ? ::StatHat::SyncAPI : ::StatHat::API)
 
-          @logger.debug("[#{self.class}] calling #{klass}.ez_post_#{type}('#{full_name}', '#{@key}', #{value})")
+          logger.debug("[#{self.class}] calling #{klass}.ez_post_#{type}('#{full_name}', '#{@key}', #{value})")
           klass.send("ez_post_#{type}", full_name, @key, value)
         end
 
