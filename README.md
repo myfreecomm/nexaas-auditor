@@ -1,6 +1,8 @@
 # Nexaas::Auditor
 
 [![Build Status](https://travis-ci.org/myfreecomm/nexaas-auditor.svg?branch=master)](https://travis-ci.org/myfreecomm/nexaas-auditor)
+[![Test Coverage](https://codeclimate.com/github/myfreecomm/nexaas-auditor/badges/coverage.svg)](https://codeclimate.com/github/myfreecomm/nexaas-auditor/coverage)
+[![Code Climate](https://codeclimate.com/github/myfreecomm/nexaas-auditor/badges/gpa.svg)](https://codeclimate.com/github/myfreecomm/nexaas-auditor)
 
 Common **opnionated** code for audit logs and statistcs tracking for Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html). Used in production in a few [Nexaas](http://www.nexaas.com) systems.
 
