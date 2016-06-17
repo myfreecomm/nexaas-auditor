@@ -4,6 +4,7 @@ module Nexaas
       class Base
 
         def track_count(name, value=nil)
+          value ||= 1
           track(:count, name, value)
         end
 
@@ -14,7 +15,6 @@ module Nexaas
         private
 
         def track(type, name, value)
-          value ||= 1 if type == :count
           validate_value!(value, type)
           full_name = full_metric_name(name)
           validate_name!(name, full_name)
