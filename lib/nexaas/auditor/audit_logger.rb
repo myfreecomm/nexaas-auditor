@@ -35,7 +35,7 @@ module Nexaas
 
       def safe_call(&block)
         begin
-          yield
+          yield(block)
         rescue => exception
           logger.fatal("role=audit_logger class=#{self.class} measure=errors.unable_to_log exception=#{exception.class}")
         end

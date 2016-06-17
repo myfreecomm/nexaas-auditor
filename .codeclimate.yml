@@ -7,8 +7,17 @@ engines:
       - ruby
   fixme:
     enabled: true
+    exclude_fingerprints:
+    - c103797679d4bb2ce925cda70648a108
+    - 67060721abddc017841c2ff22a9ed4f1
+    - fdd9efff93cbb79cfdea6e545522e5a7
+
   rubocop:
     enabled: true
+    exclude_fingerprints:
+    - 82c26cac5aaeae892c903826c92c1843
+    - 72acdeda323c6192b7737afb81aaa031
+    - 1085a95b7954028c987d0180fbc04f29
 ratings:
   paths:
   - "**.rb"
