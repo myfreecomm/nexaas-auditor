@@ -21,6 +21,13 @@ describe Nexaas::Auditor::StatisticsTrackers::Log do
         with("[Nexaas::Auditor::StatisticsTrackers::Log] type=count metric=myapp.foo.bar value=1")
       subject.track_count('foo.bar')
     end
+    it 'works without a namespace too' do
+      other = described_class.new(logger)
+      expect(logger).
+        to receive(:info).
+        with("[Nexaas::Auditor::StatisticsTrackers::Log] type=count metric=foo.bar value=12")
+      other.track_count('foo.bar', 12)
+    end
     ['string', '', Time.now, '1'].each do |value|
       it "requires a valid value, not #{value.inspect}" do
         expect { subject.track_count('foobar', value) }.
