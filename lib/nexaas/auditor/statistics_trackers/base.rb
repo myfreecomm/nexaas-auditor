@@ -3,13 +3,13 @@ module Nexaas
     module StatisticsTrackers
       class Base
 
-        def track_count(name, value=nil)
+        def track_count(metric:, value: nil)
           value ||= 1
-          track(:count, name, value)
+          track(:count, metric, value)
         end
 
-        def track_value(name, value)
-          track(:value, name, value)
+        def track_value(metric:, value:)
+          track(:value, metric, value)
         end
 
         private
