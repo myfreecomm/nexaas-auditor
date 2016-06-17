@@ -74,12 +74,12 @@ end
 Nexaas::Auditor.subscribe_all
 ```
 
-Then, create your loggers and statistic trackers in `app/loggers/` and `app/statistics/` for example, inheriting from `Nexaas::Auditor::LogSubscriber` and `Nexaas::Auditor::StatsSubscriber` respectively.
+Then, create your loggers and statistic trackers in `app/loggers/` and `app/statistics/` for example, inheriting from `Nexaas::Auditor::LogsSubscriber` and `Nexaas::Auditor::StatsSubscriber` respectively.
 
 For example:
 
 ```ruby
-class UsersAppLogger < ::Nexaas::Auditor::LogSubscriber
+class UsersAppLogger < ::Nexaas::Auditor::LogsSubscriber
   # The namespace for events to subscribe to. In this example, subscribe to all
   # events beggining with "app.users.".
   def self.pattern
