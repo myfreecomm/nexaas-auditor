@@ -14,18 +14,18 @@ describe Nexaas::Auditor::Adapters::Nunes do
 
   describe '#increment' do
     it 'uses #track_count on the client, with a "rails." prefix' do
-      expect(client).to receive(:track_count).with('rails.foobar.baz', 42)
+      expect(client).to receive(:track_count).with(metric: 'rails.foobar.baz', value: 42)
       subject.increment('foobar baz', 42)
     end
     it 'assumes 1 if value is not supplied' do
-      expect(client).to receive(:track_count).with('rails.foobar', 1)
+      expect(client).to receive(:track_count).with(metric: 'rails.foobar', value: 1)
       subject.increment('foobar')
     end
   end
 
   describe '#timing' do
     it 'uses #track_value on the client, with a "rails." prefix' do
-      expect(client).to receive(:track_value).with('rails.foobar.baz', 42.5)
+      expect(client).to receive(:track_value).with(metric: 'rails.foobar.baz', value: 42.5)
       subject.timing('foobar baz', 42.5)
     end
   end

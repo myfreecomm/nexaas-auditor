@@ -13,11 +13,11 @@ module Nexaas
         end
 
         def increment(metric, value=1)
-          client.track_count(prepare(metric), value)
+          client.track_count(metric: prepare(metric), value: value)
         end
 
         def timing(metric, value)
-          client.track_value(prepare(metric), value)
+          client.track_value(metric: prepare(metric), value: value)
         end
 
         def prepare(metric, replacement = Separator)
