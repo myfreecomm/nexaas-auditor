@@ -4,7 +4,7 @@
 
 Common **opnionated** code for audit logs and statistcs tracking for Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html). Used in production in a few [Nexaas](http://www.nexaas.com) systems.
 
-This has been tested with Rails 4.2.x only so far. It probably works fine as well in Rails 4.1.x, but I'm not sure about Rails 3.x yet.
+This has been tested with Rails 4.2.x only so far. It probably works fine as well in Rails 4.1.x, but I'm not sure about Rails 3.x yet. It requires Ruby v2.2.3 at least (but we recommend using v2.3.x).
 
 The audit log is created in a [logfmt](https://www.brandur.org/logfmt) format only for now. Support for more log formats is planned in the future.
 
