@@ -10,7 +10,7 @@ This has been tested with Rails 4.2.x only so far. It probably works fine as wel
 
 The audit log is created in a [logfmt](https://www.brandur.org/logfmt) format only for now. Support for more log formats is planned in the future.
 
-Both the audit log and statistics tracking assume all instrumented events are named in a dot notation format, for example you could use `'app.users.login.sucess'` to instrument a successful user login event. The `'app.'` prefix is a suggestion to separate your bussiness-logic events from framework-specific (Rails) events, which will always have a `'rails.'` prefix, for example `'rails.action_controller.runtime.total'` for example.
+Both the audit log and statistics tracking assume all instrumented events are named in a dot notation format, for example you could use `'app.users.login.sucess'` to instrument a successful user login event. The `'app.'` prefix is a suggestion to separate your business-logic events from framework-specific (Rails) events, which will always have a `'rails.'` prefix, for example `'rails.action_controller.runtime.total'` for example.
 
 ## Installation
 
@@ -43,10 +43,10 @@ Nexaas::Auditor.configure do |config|
   config.enabled = true
   config.logger = Rails.logger
 
-  # use audit logging for bussiness-logic instrumented events
+  # use audit logging for business-logic instrumented events
   config.log_app_events = true
 
-  # use statistics tracking for bussiness-logic instrumented events
+  # use statistics tracking for business-logic instrumented events
   config.track_app_events = true
 
   # use statistics tracking for default Rails instrumented events
