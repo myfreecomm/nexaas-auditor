@@ -1,5 +1,7 @@
 # Nexaas::Auditor
 
+[![Build Status](https://travis-ci.org/myfreecomm/nexaas-auditor.svg?branch=master)](https://travis-ci.org/myfreecomm/nexaas-auditor)
+
 Common **opnionated** code for audit logs and statistcs tracking for Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html). Used in production in a few [Nexaas](http://www.nexaas.com) systems.
 
 This has been tested with Rails 4.2.x only so far. It probably works fine as well in Rails 4.1.x, but I'm not sure about Rails 3.x yet.

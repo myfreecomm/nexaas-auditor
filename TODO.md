@@ -2,7 +2,6 @@
 
 Tasks yet to be done, in order of importance. Feel free to help out ;-)
 
-- Setup Travis.CI integration
 - Setup CodeClimate integration
 - Only require [Nunes](https://github.com/jnunemaker/nunes) gem if the configuration says `track_rails_events = true`, and "fail fast" if `Nunes` is not loaded
 - Only require [StatHat](https://github.com/patrickxb/stathat) gem if the configuration says `statistics_service = 'stathat'`, and "fail fast" if `StatHat` is not loaded
