@@ -70,6 +70,10 @@ Nexaas::Auditor.configure do |config|
   end
 end
 
+# make sure all subscribers are loaded before subscribing below
+Dir[Rails.root.join("app/loggers/*.rb")].each { |f| require f }
+Dir[Rails.root.join("app/statistics/*.rb")].each { |f| require f }
+
 # setup all subscribers
 Nexaas::Auditor.subscribe_all
 ```
