@@ -5,6 +5,7 @@ module Nexaas
     class Subscriber
 
       def self.subscribe_all
+        validate_subclasses!
         subscribers = []
         subclasses.each do |klass|
           subscribers << klass.subscribe()
@@ -33,6 +34,13 @@ module Nexaas
 
       def event_method_name(name)
         raise "Not Implemented, override in subclass."
+      end
+
+      # raise error if no app-level subclasses (of StatsSubscriber and
+      # LogsSubscriber) are found.
+      def self.validate_subclasses!
+        raise RuntimeError,
+          "no subclasses of #{self} found!" if subclasses.empty?
       end
 
     end
