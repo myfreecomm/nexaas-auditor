@@ -2,7 +2,7 @@
 
 Tasks yet to be done, in order of importance. Feel free to help out ;-)
 
-- Figure out a way to make sure all app-level subscribers (subclasses of `Nexaas::Auditor::LogsSubscriber` and `Nexaas::Auditor::StatsSubscriber`) are loaded by Rails before calling `Nexaas::Auditor.subscribe_all` automatically, without having to require them manually first (is adding to `config.autoload_paths` sufficient?).
+- Figure out a way to make sure all app-level subscribers (subclasses of `Nexaas::Auditor::LogsSubscriber` and `Nexaas::Auditor::StatsSubscriber`) are loaded by Rails before calling `Nexaas::Auditor.subscribe_all` automatically, without having to require them manually first.
 - Only require [Nunes](https://github.com/jnunemaker/nunes) gem if the configuration says `track_rails_events = true`, and "fail fast" if `Nunes` is not loaded.
 - Only require [StatHat](https://github.com/patrickxb/stathat) gem if the configuration says `statistics_service = 'stathat'`, and "fail fast" if `StatHat` is not loaded.
 - Extract log formating logic out of Nexaas::Auditor::AuditLogger into a proper log formating class.
