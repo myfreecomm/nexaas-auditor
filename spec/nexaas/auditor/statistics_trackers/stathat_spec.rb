@@ -59,7 +59,7 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
       it "log the error to fatal" do
         expect(subject.logger).
           to receive(:fatal).
-          with("role=audit_logger class=Nexaas::Auditor::StatisticsTrackers::Stathat measure=errors.unable_to_track exception=Net::OpenTimeout")
+          with("role=nexaas-auditor class=Nexaas::Auditor::StatisticsTrackers::Stathat measure=errors.unable_to_track exception=Net::OpenTimeout")
         subject.track_count(metric: 'foo.bar', value: 42)
       end
     end
@@ -99,7 +99,7 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
       it "log the error to fatal" do
         expect(subject.logger).
           to receive(:fatal).
-          with("role=audit_logger class=Nexaas::Auditor::StatisticsTrackers::Stathat measure=errors.unable_to_track exception=Net::OpenTimeout")
+          with("role=nexaas-auditor class=Nexaas::Auditor::StatisticsTrackers::Stathat measure=errors.unable_to_track exception=Net::OpenTimeout")
         subject.track_value(metric: 'foo.bar', value: 5.0)
       end
     end
