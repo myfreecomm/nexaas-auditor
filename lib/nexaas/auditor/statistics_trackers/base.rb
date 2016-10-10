@@ -19,7 +19,7 @@ module Nexaas
           full_name = full_metric_name(name)
           validate_name!(name, full_name)
 
-          send_track(type, full_name, value)
+          safe_call { send_track(type, full_name, value) }
         end
 
         def send_track(type, full_name, value)
@@ -44,6 +44,14 @@ module Nexaas
         # allowed values: Numeric (Integer, Float, Decimal, etc)
         def validate_value!(value, type)
           raise ArgumentError, "unsuported value: #{value} (#{value.class})" unless value.is_a?(Numeric)
+        end
+
+        def safe_call(&block)
+          begin
+            yield(block)
+          rescue => exception
+            logger.fatal("role=audit_logger class=#{self.class} measure=errors.unable_to_track exception=#{exception.class}")
+          end
         end
 
       end
