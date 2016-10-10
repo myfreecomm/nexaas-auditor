@@ -50,7 +50,7 @@ module Nexaas
           begin
             yield(block)
           rescue => exception
-            logger.fatal("role=audit_logger class=#{self.class} measure=errors.unable_to_track exception=#{exception.class}")
+            logger.fatal("role=nexaas-auditor class=#{self.class} measure=errors.unable_to_track exception=#{exception.class}")
           end
         end
 
