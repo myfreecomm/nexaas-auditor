@@ -1,5 +1,3 @@
-require 'stathat'
-
 module Nexaas
   module Auditor
     module StatisticsTrackers
@@ -11,6 +9,9 @@ module Nexaas
           @key = key.to_s
           @namespace = namespace.to_s
           @logger = Nexaas::Auditor.configuration.logger
+          if Nexaas::Auditor.configuration.statistics_service == 'stathat'
+            require 'stathat'
+          end
           raise ArgumentError, "required Stathat EZ Key not found" if @key == ''
         end
 

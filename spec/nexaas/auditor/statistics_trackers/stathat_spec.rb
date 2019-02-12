@@ -1,8 +1,11 @@
 require 'spec_helper'
+require 'stathat'
 
 describe Nexaas::Auditor::StatisticsTrackers::Stathat do
-
   before do
+    Nexaas::Auditor.configure do |c|
+      c.statistics_service = 'stathat'
+    end
     allow(StatHat::API).to receive(:ez_post_count)
     allow(StatHat::API).to receive(:ez_post_value)
     allow(StatHat::SyncAPI).to receive(:ez_post_count)
