@@ -12,19 +12,13 @@ describe Nexaas::Auditor do
   end
 
   describe '.configuration' do
-    it 'returns a new Configuration object' do
-      config = described_class.configuration
-      expect(config).to be_instance_of(Nexaas::Auditor::Configuration)
-      expect(config.enabled).to be_nil # brand new object, not run through #configure yet
-      expect(config.log_app_events).to be_falsy # brand new object, not run through #configure yet
-    end
     it 'returns a memoized Configuration object with settings' do
       described_class.configure do |c|
-        c.enabled = true
+        c.enabled = false
         c.log_app_events = true
       end
       config = described_class.configuration
-      expect(config.enabled).to be_truthy
+      expect(config.enabled).to be_falsy
       expect(config.log_app_events).to be_truthy
       config2 = described_class.configuration
       expect(config.object_id).to eql(config2.object_id)
@@ -106,6 +100,7 @@ describe Nexaas::Auditor do
 
   describe '.tracker' do
     it 'returns an instance of StatisticsTracker with values from Configuration' do
+      Nexaas::Auditor.configuration.statistics_service = 'log'
       tracker = described_class.tracker
       expect(tracker).to_not be_nil
       # because by default we use the 'log' statistics service
