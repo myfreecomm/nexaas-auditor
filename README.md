@@ -52,22 +52,21 @@ Nexaas::Auditor.configure do |config|
   # use statistics tracking for default Rails instrumented events
   # don't forget to add the 'nunes' gem to your Gemfile (we use Nunes to do the
   # heavy lifting on the instrumented Rails events)
-  config.track_rails_events = true
+  config.track_rails_events = false
 
   # optionally, prepend statistics metric names with your app name. use this if
   # you use the same statistics service (ie StatHat) for multiple apps.
   config.statistics_namespace = 'myappname'
 
-  if Rails.env.production?
-    # use StatHat service in production only
-    # don't forget to add the 'stathat' gem to your Gemfile
-    config.statistics_service = 'stathat'
-    config.stathat_settings = {key: 'stathat-ez-key'}
-  else
-    # the 'log' service only writes the stats to the audit log instead of
-    # sending them to an external service.
-    config.statistics_service = 'log'
-  end
+  # use StatHat service if you want to
+  # don't forget to add the 'stathat' gem to your Gemfile
+  # config.statistics_service = 'stathat'
+  # config.stathat_settings = {key: 'stathat-ez-key'}
+  # the 'log' service only writes the stats to the audit log instead of
+  # sending them to an external service.
+  
+  config.statistics_service = 'log'
+  
 end
 
 # make sure all subscribers are loaded before subscribing below
