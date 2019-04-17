@@ -4,9 +4,9 @@
 [![Test Coverage](https://codeclimate.com/github/myfreecomm/nexaas-auditor/badges/coverage.svg)](https://codeclimate.com/github/myfreecomm/nexaas-auditor/coverage)
 [![Code Climate](https://codeclimate.com/github/myfreecomm/nexaas-auditor/badges/gpa.svg)](https://codeclimate.com/github/myfreecomm/nexaas-auditor)
 
-Common **opnionated** code for audit logs and statistcs tracking for Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html). Used in production in a few [Nexaas](http://www.nexaas.com) systems.
+Common **opinionated** code for audit logs and statistics tracking for Rails apps, via [ActiveSupport instrumentation](http://edgeguides.rubyonrails.org/active_support_instrumentation.html). Used in production in a few [Nexaas](http://www.nexaas.com) systems.
 
-This has been tested with Rails 4.2.x only so far. It probably works fine as well in Rails 4.1.x, but I'm not sure about Rails 3.x yet. It requires Ruby v2.2.3 at least (but we recommend using v2.3.x).
+This has been tested with Rails 4.2.x and 5.2.x. We are not sure about Rails 3.x. It requires Ruby v2.2.3 at least (but we recommend using v2.3.x).
 
 The audit log is created in a [logfmt](https://www.brandur.org/logfmt) format only for now. Support for more log formats is planned in the future.
 
@@ -32,15 +32,16 @@ Or install it yourself as:
 $ gem install nexaas-auditor
 ```
 
-## Usage
+## Setup
 
-In a Rails initializer file such as `config/initializers/nexaas_auditor.rb`, put something like this:
+In a Rails initializer file such as `config/initializers/nexaas_auditor.rb`, you can setup the gem:
 
 ```ruby
 require 'nexaas/auditor'
 
 Nexaas::Auditor.configure do |config|
   config.enabled = true
+  # define what logger you will use
   config.logger = Rails.logger
 
   # use audit logging for business-logic instrumented events
@@ -62,29 +63,34 @@ Nexaas::Auditor.configure do |config|
   # don't forget to add the 'stathat' gem to your Gemfile
   # config.statistics_service = 'stathat'
   # config.stathat_settings = {key: 'stathat-ez-key'}
+
   # the 'log' service only writes the stats to the audit log instead of
   # sending them to an external service.
-  
   config.statistics_service = 'log'
-  
 end
 
+# we will be using the folder logger for the loggers
+# and the folder statistics for the trackers 
 # make sure all subscribers are loaded before subscribing below
 Dir[Rails.root.join("app/loggers/*.rb")].each { |f| require f }
+
+# if you added statistics tracking, you need to require the statistics folder too
 Dir[Rails.root.join("app/statistics/*.rb")].each { |f| require f }
 
 # setup all subscribers
 Nexaas::Auditor.subscribe_all
 ```
 
-Then, create your loggers and statistic trackers in `app/loggers/` and `app/statistics/` for example, inheriting from `Nexaas::Auditor::LogsSubscriber` and `Nexaas::Auditor::StatsSubscriber` respectively.
+## Logger
+
+Then, create your loggers in `app/loggers/` for example, inheriting from `Nexaas::Auditor::LogsSubscriber`.
 
 For example:
 
 ```ruby
 class UsersAppLogger < ::Nexaas::Auditor::LogsSubscriber
   # The namespace for events to subscribe to. In this example, subscribe to all
-  # events beggining with "app.users.".
+  # events beginning with "app.users.".
   def self.pattern
     /\Aapp\.users\..+\Z/
   end
@@ -100,15 +106,20 @@ class UsersAppLogger < ::Nexaas::Auditor::LogsSubscriber
   #
   def log_event_app_users_login_success(name, start, finish, event_id, payload)
     user_id = payload[:user_id]
-    # Do the actual loggging. The `:level` and `:measure` keys are required,
+    # Do the actual logging. The `:level` and `:measure` keys are required,
     # anything else will be transformed in a key=value pair in the log string.
     logger.log(level: :info, measure: name, user_id: user_id)
   end
 end
+```
 
+## Tracker
+
+To create your statistic trackers in `app/statistics/` for example, inheriting from `Nexaas::Auditor::StatsSubscriber`.
+```ruby
 class UsersAppStatsTracker < ::Nexaas::Auditor::StatsSubscriber
   # The namespace for events to subscribe to. In this example, subscribe to all
-  # events beggining with "app.users.".
+  # events beginning with "app.users.".
   def self.pattern
     /\Aapp\.users\..+\Z/
   end
@@ -127,9 +138,9 @@ class UsersAppStatsTracker < ::Nexaas::Auditor::StatsSubscriber
 
     # Do the actual statistic tracking.
 
-    # Use the `count` type to track event occurences or quantities. The `:metric`
+    # Use the `count` type to track event occurrences or quantities. The `:metric`
     # key is required (generally use the name or append something to the name).
-    # The `:value` should be an Integer. If `:value` is ommited it will be
+    # The `:value` should be an Integer. If `:value` is omitted it will be
     # assumed a value of 1.
     tracker.track_count(metric: name, value: 1)
 
@@ -142,7 +153,9 @@ class UsersAppStatsTracker < ::Nexaas::Auditor::StatsSubscriber
 end
 ```
 
-Now all that is left is for you to instrument your code to fire the events above. Following the example of logging and tracking user logins, we might have this in a hipothetical `SessionsController` in your app:
+## Usage
+
+Now all that is left for you is to instrument your code to fire the events above. Following the example of logging and tracking an user login, we might have this in a hypothetical `SessionsController` in your app:
 
 ```ruby
 class SessionsController < ApplicationController

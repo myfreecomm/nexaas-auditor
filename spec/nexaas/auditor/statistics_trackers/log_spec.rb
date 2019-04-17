@@ -31,13 +31,13 @@ describe Nexaas::Auditor::StatisticsTrackers::Log do
     ['string', '', Time.now, '1'].each do |value|
       it "requires a valid value, not #{value.inspect}" do
         expect { subject.track_count(metric: 'foobar', value: value) }.
-          to raise_error(ArgumentError, /unsuported value/)
+          to raise_error(ArgumentError, /unsupported value/)
       end
     end
     [nil, '', Time.now, 'foo/bar', 'foo=bar'].each do |value|
       it "requires a valid metric name, not #{value.inspect}" do
         expect { subject.track_count(metric: value, value: 1) }.
-          to raise_error(ArgumentError, /unsuported metric name/)
+          to raise_error(ArgumentError, /unsupported metric name/)
       end
     end
   end
@@ -52,15 +52,14 @@ describe Nexaas::Auditor::StatisticsTrackers::Log do
     ['string', '', Time.now, '1'].each do |value|
       it "requires a valid value, not #{value.inspect}" do
         expect { subject.track_value(metric: 'foobar', value: value) }.
-          to raise_error(ArgumentError, /unsuported value/)
+          to raise_error(ArgumentError, /unsupported value/)
       end
     end
     [nil, '', Time.now, 'foo/bar', 'foo=bar'].each do |value|
       it "requires a valid metric name, not #{value.inspect}" do
         expect { subject.track_value(metric: value, value: 1.0) }.
-          to raise_error(ArgumentError, /unsuported metric name/)
+          to raise_error(ArgumentError, /unsupported metric name/)
       end
     end
   end
-
 end

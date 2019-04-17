@@ -15,13 +15,11 @@ require 'nexaas/auditor/statistics_tracker'
 
 module Nexaas
   module Auditor
-
     extend SingleForwardable
     # forwards Nexaas::Auditor.instrument to ActiveSupport::Notifications.instrument
-    single_delegate :instrument => ActiveSupport::Notifications
+    single_delegate instrument: ActiveSupport::Notifications
 
     class << self
-
       def configure
         # if configuration.enabled has not been set yet (is still 'nil'), set to true.
         configuration.enabled = true if configuration.enabled.nil?
@@ -50,8 +48,6 @@ module Nexaas
         subscribers << RailsSubscriber.subscribe_all if configuration.track_rails_events
         subscribers
       end
-
     end
-
   end
 end

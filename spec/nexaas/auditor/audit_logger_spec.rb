@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Nexaas::Auditor::AuditLogger do
-
   it 'instanciates using the logger from the Configuration' do
     logger = double('SomeLogger')
     expect(Nexaas::Auditor).
@@ -39,10 +38,9 @@ describe Nexaas::Auditor::AuditLogger do
         to receive(:fatal).
         with("role=audit_logger class=Nexaas::Auditor::AuditLogger measure=errors.unable_to_log exception=RuntimeError")
 
-      expect {
+      expect do
         subject.log(level: :warn, measure: 'foo.bar', other: 'info')
-      }.to_not raise_error
+      end.to_not raise_error
     end
   end
-
 end

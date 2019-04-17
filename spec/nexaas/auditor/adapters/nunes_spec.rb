@@ -29,5 +29,4 @@ describe Nexaas::Auditor::Adapters::Nunes do
       subject.timing('foobar baz', 42.5)
     end
   end
-
 end

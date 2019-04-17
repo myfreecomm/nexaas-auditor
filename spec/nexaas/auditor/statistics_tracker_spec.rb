@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Nexaas::Auditor::StatisticsTracker do
-
   describe '.setup' do
     it 'requires a valid service' do
       expect { described_class.setup('foobar') }.
@@ -10,7 +9,7 @@ describe Nexaas::Auditor::StatisticsTracker do
     it 'instanciates a new Stathat tracker' do
       expect(Nexaas::Auditor).
         to receive_message_chain(:configuration, :stathat_settings).
-        and_return({key: 'ez-key'})
+        and_return(key: 'ez-key')
       expect(Nexaas::Auditor::StatisticsTrackers::Stathat).
         to receive(:new).with('ez-key', 'myapp')
       described_class.setup('stathat', 'myapp')
@@ -25,5 +24,4 @@ describe Nexaas::Auditor::StatisticsTracker do
       described_class.setup('log', 'myapp')
     end
   end
-
 end

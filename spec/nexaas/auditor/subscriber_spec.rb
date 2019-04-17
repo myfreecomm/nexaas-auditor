@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Nexaas::Auditor::Subscriber do
-
   describe '.subscribe_all' do
     it 'raises an error if no subclasses are found (on the Rails app)' do
       expect(described_class).to receive(:subclasses).and_return([])
@@ -44,5 +43,4 @@ describe Nexaas::Auditor::Subscriber do
     expect { subject.send(:event_method_name, 'some name') }.
       to raise_error(RuntimeError)
   end
-
 end

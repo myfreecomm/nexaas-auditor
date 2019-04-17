@@ -3,7 +3,6 @@ require 'logger'
 module Nexaas
   module Auditor
     class Configuration
-
       attr_accessor :enabled
       attr_accessor :logger
 
@@ -24,7 +23,7 @@ module Nexaas
         @track_rails_events = false
         @statistics_namespace = nil
         @statistics_service = 'log' # or 'stathat'
-        @stathat_settings = {key: nil}
+        @stathat_settings = { key: nil }
       end
 
       # allow params to be read like a hash
@@ -35,7 +34,6 @@ module Nexaas
       def logger
         @logger ||= ::Logger.new(STDERR)
       end
-
     end
   end
 end

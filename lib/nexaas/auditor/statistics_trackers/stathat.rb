@@ -2,16 +2,13 @@ module Nexaas
   module Auditor
     module StatisticsTrackers
       class Stathat < Base
-
         attr_reader :logger
 
-        def initialize(key, namespace=nil)
+        def initialize(key, namespace = nil)
           @key = key.to_s
           @namespace = namespace.to_s
           @logger = Nexaas::Auditor.configuration.logger
-          if Nexaas::Auditor.configuration.statistics_service == 'stathat'
-            require 'stathat'
-          end
+          require 'stathat' if Nexaas::Auditor.configuration.statistics_service == 'stathat'
           raise ArgumentError, "required Stathat EZ Key not found" if @key == ''
         end
 
@@ -19,10 +16,10 @@ module Nexaas
 
         # Regex to determine if the current process is a short lived kind of
         # script.
-        ShortRunningProcessNamesRegex = /sidekiq|resque|delayed|rspec|rake/i
+        SHORT_RUNNING_PROCESS_NAMES_REGEX = /sidekiq|resque|delayed|rspec|rake/i.freeze
 
         def short_running_process?
-          $0 =~ ShortRunningProcessNamesRegex
+          $0 =~ SHORT_RUNNING_PROCESS_NAMES_REGEX
         end
 
         def send_track(type, full_name, value)
@@ -34,7 +31,6 @@ module Nexaas
           logger.debug("[#{self.class}] calling #{klass}.ez_post_#{type}('#{full_name}', '#{@key}', #{value})")
           klass.send("ez_post_#{type}", full_name, @key, value)
         end
-
       end
     end
   end

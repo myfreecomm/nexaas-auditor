@@ -27,7 +27,8 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
     it 'logs the count metric to debug' do
       expect(subject.logger).
         to receive(:debug).
-        with("[Nexaas::Auditor::StatisticsTrackers::Stathat] calling StatHat::SyncAPI.ez_post_count('myapp.foo.bar', 'ez-key', 42)")
+        with("[Nexaas::Auditor::StatisticsTrackers::Stathat] calling "\
+             "StatHat::SyncAPI.ez_post_count('myapp.foo.bar', 'ez-key', 42)")
       subject.track_count(metric: 'foo.bar', value: 42)
     end
     it 'sends the metric to StatHat' do
@@ -43,13 +44,13 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
     ['string', '', Time.now, '1'].each do |value|
       it "requires a valid value, not #{value.inspect}" do
         expect { subject.track_count(metric: 'foobar', value: value) }.
-          to raise_error(ArgumentError, /unsuported value/)
+          to raise_error(ArgumentError, /unsupported value/)
       end
     end
     [nil, '', Time.now, 'foo/bar', 'foo=bar'].each do |value|
       it "requires a valid metric name, not #{value.inspect}" do
         expect { subject.track_count(metric: value, value: 1) }.
-          to raise_error(ArgumentError, /unsuported metric name/)
+          to raise_error(ArgumentError, /unsupported metric name/)
       end
     end
 
@@ -57,12 +58,13 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
       before { allow(StatHat::SyncAPI).to receive(:ez_post_count).and_raise(Net::OpenTimeout) }
 
       it "do not raise an error" do
-        expect{ subject.track_count(metric: 'foo.bar', value: 42) }.to_not raise_error
+        expect { subject.track_count(metric: 'foo.bar', value: 42) }.to_not raise_error
       end
       it "log the error to fatal" do
         expect(subject.logger).
           to receive(:fatal).
-          with("role=nexaas-auditor class=Nexaas::Auditor::StatisticsTrackers::Stathat measure=errors.unable_to_track exception=Net::OpenTimeout")
+          with("role=nexaas-auditor class=Nexaas::Auditor::StatisticsTrackers::Stathat "\
+               "measure=errors.unable_to_track exception=Net::OpenTimeout")
         subject.track_count(metric: 'foo.bar', value: 42)
       end
     end
@@ -72,7 +74,8 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
     it 'logs the value metric to debug' do
       expect(subject.logger).
         to receive(:debug).
-        with("[Nexaas::Auditor::StatisticsTrackers::Stathat] calling StatHat::SyncAPI.ez_post_value('myapp.foo.bar', 'ez-key', 42.5)")
+        with("[Nexaas::Auditor::StatisticsTrackers::Stathat] calling "\
+             "StatHat::SyncAPI.ez_post_value('myapp.foo.bar', 'ez-key', 42.5)")
       subject.track_value(metric: 'foo.bar', value: 42.5)
     end
     it 'sends the metric to StatHat' do
@@ -83,13 +86,13 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
     ['string', '', Time.now, '1'].each do |value|
       it "requires a valid value, not #{value.inspect}" do
         expect { subject.track_value(metric: 'foobar', value: value) }.
-          to raise_error(ArgumentError, /unsuported value/)
+          to raise_error(ArgumentError, /unsupported value/)
       end
     end
     [nil, '', Time.now, 'foo/bar', 'foo=bar'].each do |value|
       it "requires a valid metric name, not #{value.inspect}" do
         expect { subject.track_value(metric: value, value: 1.0) }.
-          to raise_error(ArgumentError, /unsuported metric name/)
+          to raise_error(ArgumentError, /unsupported metric name/)
       end
     end
 
@@ -97,15 +100,15 @@ describe Nexaas::Auditor::StatisticsTrackers::Stathat do
       before { allow(StatHat::SyncAPI).to receive(:ez_post_value).and_raise(Net::OpenTimeout) }
 
       it "do not raise an error" do
-        expect{ subject.track_value(metric: 'foo.bar', value: 5.0) }.to_not raise_error
+        expect { subject.track_value(metric: 'foo.bar', value: 5.0) }.to_not raise_error
       end
       it "log the error to fatal" do
         expect(subject.logger).
           to receive(:fatal).
-          with("role=nexaas-auditor class=Nexaas::Auditor::StatisticsTrackers::Stathat measure=errors.unable_to_track exception=Net::OpenTimeout")
+          with("role=nexaas-auditor class=Nexaas::Auditor::StatisticsTrackers::Stathat "\
+               "measure=errors.unable_to_track exception=Net::OpenTimeout")
         subject.track_value(metric: 'foo.bar', value: 5.0)
       end
     end
   end
-
 end

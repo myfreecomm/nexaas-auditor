@@ -82,10 +82,10 @@ describe Nexaas::Auditor do
       end
       allow(Nexaas::Auditor::Subscriber).
         to receive(:subscribe_all).
-        and_return(['some', 'subscribers'])
+        and_return(%w[some subscribers])
       subscribers = described_class.subscribe_all
       expect(subscribers).
-        to eql([['some', 'subscribers'], ['some', 'subscribers']])
+        to eql([%w[some subscribers], %w[some subscribers]])
     end
   end
 
@@ -95,7 +95,7 @@ describe Nexaas::Auditor do
       expect(logger).to_not be_nil
       expect(logger).to be_instance_of(Nexaas::Auditor::AuditLogger)
     end
-    # TODO how to test the Thread.current stuff?
+    # TODO: how to test the Thread.current stuff?
   end
 
   describe '.tracker' do
@@ -106,7 +106,6 @@ describe Nexaas::Auditor do
       # because by default we use the 'log' statistics service
       expect(tracker).to be_instance_of(Nexaas::Auditor::StatisticsTrackers::Log)
     end
-    # TODO how to test the Thread.current stuff?
+    # TODO: how to test the Thread.current stuff?
   end
-
 end

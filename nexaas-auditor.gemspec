@@ -1,5 +1,4 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'nexaas/auditor/version'
 
@@ -9,8 +8,10 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Rodrigo Tassinari de Oliveira"]
   spec.email         = ["rodrigo@pittlandia.net"]
 
-  spec.summary       = %q{Common code for audit logs and statistcs tracking for Nexaas Rails apps, via ActiveSupport::Instrumentation.}
-  spec.description   = %q{Common code for audit logs and statistcs tracking for Nexaas Rails apps, via ActiveSupport::Instrumentation.}
+  spec.summary       = 'Common code for audit logs and statistcs tracking for Nexaas Rails apps, '\
+                       'via ActiveSupport::Instrumentation.'
+  spec.description   = 'Common code for audit logs and statistcs tracking for Nexaas Rails apps, '\
+                       'via ActiveSupport::Instrumentation.'
   spec.homepage      = "https://github.com/myfreecomm/nexaas-auditor"
   spec.license       = "MIT"
 
@@ -27,9 +28,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.12"
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "guard-rspec", "~> 4.7"
   spec.add_development_dependency "rake", "~> 11.1"
   spec.add_development_dependency "rspec", "~> 3.4"
-  spec.add_development_dependency "guard-rspec", "~> 4.7"
   spec.add_development_dependency "test_notifier", "~> 2.0"
 end

@@ -2,7 +2,6 @@ module Nexaas
   module Auditor
     module StatisticsTrackers
       class Base
-
         def track_count(metric:, value: nil)
           value ||= 1
           track(:count, metric, value)
@@ -22,7 +21,7 @@ module Nexaas
           safe_call { send_track(type, full_name, value) }
         end
 
-        def send_track(type, full_name, value)
+        def send_track(_type, _full_name, _value)
           raise "Not Implemented, override in subclass."
         end
 
@@ -36,24 +35,22 @@ module Nexaas
 
         # allowed chars: a-z, A-Z, `.`, `-` and `_`
         def validate_name!(name, full_name)
-          if (name.to_s == '') || !(full_name =~ /\A[a-zA-Z0-9\.\-_]+\Z/)
-            raise ArgumentError, "unsuported metric name: '#{name}'"
-          end
+          return unless (name.to_s == '') || full_name !~ /\A[a-zA-Z0-9\.\-_]+\Z/
+
+          raise ArgumentError, "unsupported metric name: '#{name}'"
         end
 
         # allowed values: Numeric (Integer, Float, Decimal, etc)
-        def validate_value!(value, type)
-          raise ArgumentError, "unsuported value: #{value} (#{value.class})" unless value.is_a?(Numeric)
+        def validate_value!(value, _type)
+          raise ArgumentError, "unsupported value: #{value} (#{value.class})" unless value.is_a?(Numeric)
         end
 
         def safe_call(&block)
-          begin
-            yield(block)
-          rescue => exception
-            logger.fatal("role=nexaas-auditor class=#{self.class} measure=errors.unable_to_track exception=#{exception.class}")
-          end
+          yield(block)
+        rescue StandardError => exception
+          logger.fatal("role=nexaas-auditor class=#{self.class} "\
+                       "measure=errors.unable_to_track exception=#{exception.class}")
         end
-
       end
     end
   end

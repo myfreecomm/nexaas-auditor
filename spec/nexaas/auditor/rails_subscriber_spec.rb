@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Nexaas::Auditor::RailsSubscriber do
-
   it 'does not inherit from Subscriber' do
     expect(subject).to_not be_kind_of(Nexaas::Auditor::Subscriber)
   end
@@ -25,5 +24,4 @@ describe Nexaas::Auditor::RailsSubscriber do
       expect(wrapped_tracker.client).to eql(tracker)
     end
   end
-
 end
